@@ -8,7 +8,7 @@
 		root.chainit = factory();
 	}
 
-})(this, function(b) {
+})(this, function() {
 
 
 	var chain = function() {
