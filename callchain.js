@@ -14,6 +14,7 @@
 	var chain = function() {
 		this.queue = [];
 		this.result = [];
+		this.func;
 		this.temp_result; 	
 	};
 
@@ -23,7 +24,7 @@
 		}
 		
 		var queue = Array.prototype.slice.call(arguments);
-		queue.shift()();
+		queue.shift()(new handler(ref));
 
 		return this;
 	};
@@ -32,8 +33,8 @@
 
 	};
 
-	chain.prototype.getResult = function() {
-		return this.result;
+	chain.prototype.getResult = function(func) {
+		this.func = func;
 	};
 
 	function checkargs(arg) {
@@ -44,18 +45,20 @@
 		return valid;
 	}
 
-	function handler() {
-
+	function handler(ref) {
+		this.ref = ref;
 	};
 
-	handler.prototype.done = function() {
+	handler.prototype.done = function(temp_result) {
 		var func = queue.shift();
 
 		if(func) {
-			temp_result = func(this, temp_result);
+			 func(this, temp_result);
+		} else {
+			this.ref.func(this.result);
 		}
 
-		queue.length == 0 && result.push(temp_result);
+		queue.length == 0 && this.ref.result.push(temp_result);
 	}
 
 
